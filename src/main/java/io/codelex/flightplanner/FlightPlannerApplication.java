@@ -1,13 +1,13 @@
-package io.codelex.flightplannerapp;
+package io.codelex.flightplanner;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FlightPlannerAppApplication {
+public class FlightPlannerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(FlightPlannerAppApplication.class, args);
+        SpringApplication.run(FlightPlannerApplication.class, args);
     }
 
 }

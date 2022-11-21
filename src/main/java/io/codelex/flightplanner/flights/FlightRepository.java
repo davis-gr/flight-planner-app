@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class FlightRepository {
@@ -24,8 +24,8 @@ public class FlightRepository {
         flightList.removeIf(flight -> flight.getId().equals(flightId));
     }
 
-    public Flight fetchFlight(Long flightId) {
-        return flightList.stream().filter(f -> Objects.equals(f.getId(), flightId)).toList().get(0);
+    public Optional<Flight> fetchFlight(Long flightId) {
+        return flightList.stream().filter(f -> f.getId().equals(flightId)).findFirst();
     }
 
     public void clearFlights() {

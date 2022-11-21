@@ -25,29 +25,22 @@ public class FlightService {
     }
 
     public synchronized Flight saveFlight(AddFlightRequest flightRequest) {
-        try {
-            Flight flight = new Flight(flightRequest.getFrom(), flightRequest.getTo(), flightRequest.getCarrier(), flightRequest.getDepartureTime(), flightRequest.getArrivalTime());
-            if (flightRepository.getFlightList().size() > 0) {
-                for (Flight anyFlight : flightRepository.getFlightList()) {
-                    if (anyFlight.getFrom().equals(flight.getFrom()) && anyFlight.getTo().equals(flight.getTo()) && anyFlight.getCarrier().equals(flight.getCarrier())
-                            && anyFlight.getDepartureTime().equals(flight.getDepartureTime()) && anyFlight.getArrivalTime().equals(flight.getArrivalTime())) {
-                        throw new ResponseStatusException(HttpStatus.CONFLICT, "That flight already exists!");
-                    }
-                }
+        Flight flight = new Flight(flightRequest.getFrom(), flightRequest.getTo(), flightRequest.getCarrier(), flightRequest.getDepartureTime(), flightRequest.getArrivalTime());
+        for (Flight anyFlight : flightRepository.getFlightList()) {
+            if (flight.areFlightsEqual(anyFlight)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "That flight already exists!");
             }
-            if (flight.getFrom().equals(flight.getTo())) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't fly to the same airport!");
-            }
-            if (!flight.validDates()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid departure/arrival times!");
-            }
-            flightRepository.saveFlight(flight);
-            airportService.saveAirport(flightRequest.getFrom());
-            airportService.saveAirport(flightRequest.getTo());
-            return flight;
-        } catch (NullPointerException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad request");
         }
+        if (flight.getFrom().equals(flight.getTo())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't fly to the same airport!");
+        }
+        if (!flight.validDates()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid departure/arrival times!");
+        }
+        flightRepository.saveFlight(flight);
+        airportService.saveAirport(flightRequest.getFrom());
+        airportService.saveAirport(flightRequest.getTo());
+        return flight;
     }
 
     public void clearFlights() {
@@ -59,11 +52,7 @@ public class FlightService {
     }
 
     public Flight fetchFlight(Long flightId) {
-        try {
-            return flightRepository.fetchFlight(flightId);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Flight not found!");
-        }
+        return flightRepository.fetchFlight(flightId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flight not found!"));
     }
 
     public List<Flight> getFlightList() {

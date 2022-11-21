@@ -1,19 +1,15 @@
 package io.codelex.flightplanner.airports.objects;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class Airport {
 
     @NotBlank
-    @NotNull
     private String country;
     @NotBlank
-    @NotNull
     private String city;
     @NotBlank
-    @NotNull
     private String airport;
 
     public Airport(String country, String city, String airport) {

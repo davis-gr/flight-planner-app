@@ -9,14 +9,13 @@ import java.util.Objects;
 public class Flight {
 
     private static Long counter = 1L;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     private Long id;
     private Airport from;
     private Airport to;
     private String carrier;
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
-
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public Flight(Airport from, Airport to, String carrier, LocalDateTime departureTime, LocalDateTime arrivalTime) {
         this.id = counter++;
@@ -54,6 +53,11 @@ public class Flight {
 
     public boolean validDates() {
         return arrivalTime.isAfter(departureTime);
+    }
+
+    public boolean areFlightsEqual(Flight secondFlight) {
+        return this.getFrom().equals(secondFlight.getFrom()) && this.getTo().equals(secondFlight.getTo()) && this.getCarrier().equals(secondFlight.getCarrier())
+                && this.getDepartureTime().equals(secondFlight.getDepartureTime()) && this.getArrivalTime().equals(secondFlight.getArrivalTime());
     }
 
     @Override

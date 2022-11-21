@@ -1,7 +1,6 @@
 package io.codelex.flightplanner.api;
 
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
 
 public class SearchFlightsRequest {
 
@@ -40,18 +39,6 @@ public class SearchFlightsRequest {
 
     public void setDepartureDate(String departureDate) {
         this.departureDate = departureDate;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SearchFlightsRequest that)) return false;
-        return getFrom().equals(that.getFrom()) && getTo().equals(that.getTo()) && getDepartureDate().equals(that.getDepartureDate());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getFrom(), getTo(), getDepartureDate());
     }
 
     @Override

@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class AirportRepository {
+public class AirportInMemoryRepository {
 
     public List<Airport> airportList = new ArrayList<>();
 
-    public AirportRepository() {
+    public AirportInMemoryRepository() {
     }
 
     public List<Airport> getAirport(String search) {
@@ -24,8 +24,9 @@ public class AirportRepository {
         return airportList;
     }
 
-    public void saveAirport(Airport airport) {
+    public Airport saveAirport(Airport airport) {
         airportList.add(airport);
+        return airport;
     }
 
 }

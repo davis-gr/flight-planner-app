@@ -1,20 +1,36 @@
 package io.codelex.flightplanner.flights.objects;
 
 import io.codelex.flightplanner.airports.objects.Airport;
+import lombok.AllArgsConstructor;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+@Entity
+@AllArgsConstructor
+@Table(name = "flights")
 public class Flight {
 
+    @Transient
     private static Long counter = 1L;
+    @Transient
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+    @ManyToOne
+    @JoinColumn(name="airport_id_from", referencedColumnName = "id")
     private Airport from;
+    @ManyToOne
+    @JoinColumn(name="airport_id_to", referencedColumnName = "id")
     private Airport to;
+    @Column
     private String carrier;
+    @Column
     private LocalDateTime departureTime;
+    @Column
     private LocalDateTime arrivalTime;
 
     public Flight(Airport from, Airport to, String carrier, LocalDateTime departureTime, LocalDateTime arrivalTime) {
@@ -26,6 +42,9 @@ public class Flight {
         this.arrivalTime = arrivalTime;
     }
 
+    public Flight() {
+
+    }
 
     public Long getId() {
         return id;

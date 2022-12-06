@@ -13,62 +13,17 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
-public class FlightService {
+public interface FlightService {
 
+    public Flight saveFlight(AddFlightRequest flightRequest);
 
-    private FlightRepository flightRepository;
-    private AirportService airportService;
+    public void clearFlights();
 
-    public FlightService(FlightRepository flightRepository, AirportService airportService) {
-        this.flightRepository = flightRepository;
-        this.airportService = airportService;
-    }
+    public void deleteFlight(Long flightId);
 
-    public synchronized Flight saveFlight(AddFlightRequest flightRequest) {
-        Flight flight = new Flight(flightRequest.getFrom(), flightRequest.getTo(), flightRequest.getCarrier(), flightRequest.getDepartureTime(), flightRequest.getArrivalTime());
-        for (Flight anyFlight : flightRepository.getFlightList()) {
-            if (flight.areFlightsEqual(anyFlight)) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "That flight already exists!");
-            }
-        }
-        if (flight.getFrom().equals(flight.getTo())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't fly to the same airport!");
-        }
-        if (!flight.validDates()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid departure/arrival times!");
-        }
-        flightRepository.saveFlight(flight);
-        airportService.saveAirport(flightRequest.getFrom());
-        airportService.saveAirport(flightRequest.getTo());
-        return flight;
-    }
+    public Flight fetchFlight(Long flightId);
 
-    public void clearFlights() {
-        flightRepository.clearFlights();
-    }
+    public List<Flight> getFlightList();
 
-    public void deleteFlight(Long flightId) {
-        flightRepository.deleteFlight(flightId);
-    }
-
-    public Flight fetchFlight(Long flightId) {
-        return flightRepository.fetchFlight(flightId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flight not found!"));
-    }
-
-    public List<Flight> getFlightList() {
-        return flightRepository.getFlightList();
-    }
-
-    public SearchFlightsResponse searchFlights(@RequestBody SearchFlightsRequest searchFlightsRequest) {
-        SearchFlightsRequest searchRequest = new SearchFlightsRequest(searchFlightsRequest.getFrom(), searchFlightsRequest.getTo(), searchFlightsRequest.getDepartureDate());
-        if (searchRequest.getFrom().equals(searchRequest.getTo())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't fly to the same airport!");
-        }
-        List<Flight> searchResult = flightRepository.getFlightList().stream().filter(a -> a.getFrom().getAirport().equalsIgnoreCase(searchFlightsRequest.getFrom())
-                || a.getTo().getAirport().equalsIgnoreCase(searchFlightsRequest.getTo())
-                || a.getDepartureTime().equals(searchFlightsRequest.getDepartureDate())).toList();
-
-        return new SearchFlightsResponse(searchResult, 0, searchResult.size());
-
-    }
+    public SearchFlightsResponse searchFlights(@RequestBody SearchFlightsRequest searchFlightsRequest);
 }

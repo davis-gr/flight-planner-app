@@ -1,6 +1,9 @@
 package io.codelex.flightplanner.api;
 
 import io.codelex.flightplanner.airports.objects.Airport;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -8,6 +11,9 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AddFlightRequest {
 
     @Valid
@@ -24,14 +30,6 @@ public class AddFlightRequest {
     private String arrivalTime;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-    public AddFlightRequest(Airport from, Airport to, String carrier, String departureTime, String arrivalTime) {
-        this.from = from;
-        this.to = to;
-        this.carrier = carrier.trim();
-        this.departureTime = departureTime.trim();
-        this.arrivalTime = arrivalTime.trim();
-    }
 
     public Airport getFrom() {
         return from;

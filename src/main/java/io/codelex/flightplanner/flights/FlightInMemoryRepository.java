@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class FlightRepository {
+public class FlightInMemoryRepository {
 
 
     private List<Flight> flightList = new ArrayList<>();
 
-    public FlightRepository() {
+    public FlightInMemoryRepository() {
     }
 
     public synchronized void saveFlight(Flight flight) {

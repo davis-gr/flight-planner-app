@@ -8,24 +8,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
-public class AirportService {
+public interface AirportService {
 
-    private AirportRepository repository;
-
-    public AirportService(AirportRepository repository) {
-        this.repository = repository;
-    }
-
-    public List<Airport> getAirport(String search) {
-        try {
-            return repository.getAirport(search.trim().toLowerCase());
-        }
-        catch (ArrayIndexOutOfBoundsException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Airport not found!");
-        }
-    };
-    public void saveAirport(Airport airport) {
-        repository.saveAirport(airport);
-    }
+    public List<Airport> getAirport(String search);
+    public Airport saveAirport(Airport airport);
 
 }
